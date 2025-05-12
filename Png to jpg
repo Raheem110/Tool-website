@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarCalc Pk - Solar Power Calculator for Pakistan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .flag-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .flag {
+            width: 40px;
+            height: 25px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .appliance-section, .results-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .appliance-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .appliance-name {
+            flex: 1;
+            min-width: 150px;
+            font-weight: 600;
+        }
+        
+        .appliance-controls {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .wattage-select {
+            width: 120px;
+            height: 30px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .hours-input {
+            width: 60px;
+            height: 30px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .result-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        
+        .note {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .calculate-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .calculate-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .recommendation {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .recommendation h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .recommendation p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .system-type {
+            margin-top: 20px;
+        }
+        
+        .system-type label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .system-type select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .efficiency-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .appliance-selector {
+            margin-bottom: 20px;
+        }
+        
+        .appliance-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .add-appliance-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .add-appliance-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .custom-appliance {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .hp-note {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SolarCalc Pk</h1>
+        <div class="subtitle">Solar Power Calculator for Pakistan</div>
+        
+        <div class="flag-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg" alt="Pakistan Flag" class="flag">
+        </div>
+        
+        <div class="calculator-grid">
+            <div class="appliance-section">
+                <h2>Appliance Load Details</h2>
+                
+                <div class="system-type">
+                    <label for="system-voltage">System Voltage:</label>
+                    <select id="system-voltage">
+                        <option value="12">12V System</option>
+                        <option value="24" selected>24V System</option>
+                        <option value="48">48V System</option>
+                    </select>
+                    
+                    <label for="sun-hours">Average Daily Sun Hours:</label>
+                    <input type="number" id="sun-hours" value="5" min="1" max="10" step="0.5" class="efficiency-input">
+                    
+                    <label for="backup-days">Days of Backup Required:</label>
+                    <input type="number" id="backup-days" value="1" min="1" max="7" class="efficiency-input">
+                    
+                    <label for="battery-dod">Battery Depth of Discharge (%):</label>
+                    <input type="number" id="battery-dod" value="50" min="20" max="80" class="efficiency-input">
+                </div>
+                
+                <div class="appliance-selector">
+                    <label for="appliance-list">Add Appliance:</label>
+                    <select id="appliance-list">
+                        <option value="">-- Select Appliance --</option>
+                        <option value="ac">Air Conditioner (AC)</option>
+                        <option value="fridge">Refrigerator</option>
+                        <option value="fan">Fan</option>
+                        <option value="pump">Water Pump</option>
+                        <option value="light">Light Bulb</option>
+                        <option value="tv">TV</option>
+                        <option value="computer">Computer/Laptop</option>
+                        <option value="washing">Washing Machine</option>
+                        <option value="microwave">Microwave Oven</option>
+                        <option value="iron">Electric Iron</option>
+                        <option value="heater">Water Heater</option>
+                        <option value="cooler">Desert Cooler</option>
+                        <option value="router">WiFi Router</option>
+                        <option value="charger">Mobile Charger</option>
+                        <option value="custom">Custom Appliance</option>
+                    </select>
+                    <button id="add-appliance" class="add-appliance-btn">Add Appliance</button>
+                </div>
+                
+                <div id="appliances-container">
+                    <!-- Appliances will be added here dynamically -->
+                </div>
+                
+                <div class="custom-appliance" id="custom-appliance-section" style="display: none;">
+                    <div class="appliance-item">
+                        <div class="appliance-name">
+                            <input type="text" id="custom-appliance-name" placeholder="Appliance Name" style="width: 150px; padding: 5px;">
+                        </div>
+                        <div class="appliance-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-appliance="custom">-</button>
+                                <input type="number" class="quantity-input" id="custom-qty" value="1" min="1">
+                                <button class="quantity-btn plus" data-appliance="custom">+</button>
+                            </div>
+                            <input type="number" class="wattage-input" id="custom-wattage" value="100" placeholder="Wattage" min="1" style="width: 80px;">
+                            <span>W ×</span>
+                            <input type="number" class="hours-input" id="custom-hours" value="1" placeholder="Hours" min="0" max="24">
+                            <span>hours/day</span>
+                            <button id="save-custom" style="background-color: #2ecc71; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="calculate-btn" class="calculate-btn">Calculate Solar Requirements</button>
+            </div>
+            
+            <div class="results-section">
+                <h2>Solar System Requirements</h2>
+                
+                <div class="result-item">
+                    <div class="result-label">Total Daily Power Consumption</div>
+                    <div class="result-value" id="total-consumption">0 Wh</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Required Solar Panel Capacity</div>
+                    <div class="result-value" id="solar-capacity">0 W</div>
+                    <div class="note">(Assuming 80% system efficiency)</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Recommended Battery Bank</div>
+                    <div class="result-value" id="battery-capacity">0 Ah</div>
+                    <div class="note" id="battery-note"></div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Inverter Size Required</div>
+                    <div class="result-value" id="inverter-size">0 W</div>
+                    <div class="note">(20-25% larger than peak load)</div>
+                </div>
+                
+                <div class="recommendation">
+                    <h3>System Recommendation</h3>
+                    <p id="system-type-recommendation">Enter your appliance details and click calculate to get recommendations.</p>
+                    <p id="panel-recommendation"></p>
+                    <p id="battery-recommendation"></p>
+                    <p id="inverter-recommendation"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Standard appliance configurations with rating options
+            const applianceConfigs = {
+                'ac': { 
+                    name: 'Air Conditioner (AC)', 
+                    options: [
+                        {text: '1 Ton (1200W)', value: 1200},
+                        {text: '1.5 Ton (1800W)', value: 1800},
+                        {text: '2 Ton (2400W)', value: 2400},
+                        {text: '2.5 Ton (3000W)', value: 3000},
+                        {text: '3.5 Ton (4200W)', value: 4200}
+                    ],
+                    hours: 8 
+                },
+                'fridge': { 
+                    name: 'Refrigerator', 
+                    options: [
+                        {text: 'Small (150W)', value: 150},
+                        {text: 'Medium (200W)', value: 200},
+                        {text: 'Large (250W)', value: 250},
+                        {text: 'Double Door (300W)', value: 300}
+                    ],
+                    hours: 24 
+                },
+                'fan': { 
+                    name: 'Fan', 
+                    options: [
+                        {text: 'Standard (75W)', value: 75},
+                        {text: 'High Speed (100W)', value: 100},
+                        {text: 'Ceiling (80W)', value: 80},
+                        {text: 'Tower (50W)', value: 50}
+                    ],
+                    hours: 8 
+                },
+                'pump': { 
+                    name: 'Water Pump', 
+                    options: [
+                        {text: '0.5 HP (400W)', value: 400},
+                        {text: '1 HP (750W)', value: 750},
+                        {text: '1.5 HP (1100W)', value: 1100},
+                        {text: '2 HP (1500W)', value: 1500},
+                        {text: '3 HP (2200W)', value: 2200},
+                        {text: '3.5 HP (2600W)', value: 2600}
+                    ],
+                    hours: 2,
+                    note: '1 HP ≈ 750W'
+                },
+                'light': { 
+                    name: 'Light Bulb', 
+                    options: [
+                        {text: 'LED 15W', value: 15},
+                        {text: 'LED 20W', value: 20},
+                        {text: 'LED 30W', value: 30},
+                        {text: 'LED 50W', value: 50},
+                        {text: 'LED 100W', value: 100},
+                        {text: 'CFL 40W', value: 40},
+                        {text: 'Tube Light 50W', value: 50}
+                    ],
+                    hours: 6 
+                },
+                'tv': { 
+                    name: 'TV', 
+                    options: [
+                        {text: 'LED 32" (50W)', value: 50},
+                        {text: 'LED 42" (80W)', value: 80},
+                        {text: 'LED 55" (120W)', value: 120},
+                        {text: 'Plasma 42" (200W)', value: 200}
+                    ],
+                    hours: 4 
+                },
+                'computer': { 
+                    name: 'Computer/Laptop', 
+                    options: [
+                        {text: 'Laptop (50W)', value: 50},
+                        {text: 'Desktop (150W)', value: 150},
+                        {text: 'Gaming PC (300W)', value: 300}
+                    ],
+                    hours: 5 
+                },
+                'washing': { 
+                    name: 'Washing Machine', 
+                    options: [
+                        {text: 'Semi-auto (300W)', value: 300},
+                        {text: 'Auto 6kg (500W)', value: 500},
+                        {text: 'Auto 8kg (800W)', value: 800}
+                    ],
+                    hours: 1 
+                },
+                'microwave': { 
+                    name: 'Microwave Oven', 
+                    options: [
+                        {text: 'Small (800W)', value: 800},
+                        {text: 'Medium (1000W)', value: 1000},
+                        {text: 'Large (1200W)', value: 1200}
+                    ],
+                    hours: 0.5 
+                },
+                'iron': { 
+                    name: 'Electric Iron', 
+                    options: [
+                        {text: 'Standard (1000W)', value: 1000},
+                        {text: 'Steam (1500W)', value: 1500}
+                    ],
+                    hours: 0.5 
+                },
+                'heater': { 
+                    name: 'Water Heater', 
+                    options: [
+                        {text: '10L (2000W)', value: 2000},
+                        {text: '15L (2500W)', value: 2500},
+                        {text: '20L (3000W)', value: 3000}
+                    ],
+                    hours: 1 
+                },
+                'cooler': { 
+                    name: 'Desert Cooler', 
+                    options: [
+                        {text: 'Small (150W)', value: 150},
+                        {text: 'Medium (200W)', value: 200},
+                        {text: 'Large (250W)', value: 250}
+                    ],
+                    hours: 6 
+                },
+                'router': { 
+                    name: 'WiFi Router', 
+                    options: [
+                        {text: 'Standard (10W)', value: 10}
+                    ],
+                    hours: 24 
+                },
+                'charger': { 
+                    name: 'Mobile Charger', 
+                    options: [
+                        {text: 'Standard (5W)', value: 5},
+                        {text: 'Fast (10W)', value: 10},
+                        {text: 'Super Fast (20W)', value: 20}
+                    ],
+                    hours: 3 
+                }
+            };
+            
+            // Quantity buttons functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('quantity-btn')) {
+                    const appliance = e.target.getAttribute('data-appliance');
+                    const inputId = appliance === 'custom' ? 'custom-qty' : `${appliance}-qty`;
+                    const input = document.getElementById(inputId);
+                    let value = parseInt(input.value);
+                    
+                    if (e.target.classList.contains('plus')) {
+                        value += 1;
+                    } else {
+                        value = Math.max(appliance === 'custom' ? 1 : 0, value - 1);
+                    }
+                    
+                    input.value = value;
+                }
+                
+                // Remove appliance button
+                if (e.target.classList.contains('remove-appliance')) {
+                    e.target.closest('.appliance-item').remove();
+                }
+            });
+            
+            // Add appliance button
+            document.getElementById('add-appliance').addEventListener('click', function() {
+                const selectedAppliance = document.getElementById('appliance-list').value;
+                
+                if (selectedAppliance === 'custom') {
+                    document.getElementById('custom-appliance-section').style.display = 'block';
+                    return;
+                }
+                
+                if (selectedAppliance && applianceConfigs[selectedAppliance]) {
+                    addAppliance(selectedAppliance, applianceConfigs[selectedAppliance]);
+                    document.getElementById('appliance-list').value = '';
+                }
+            });
+            
+            // Save custom appliance
+            document.getElementById('save-custom').addEventListener('click', function() {
+                const name = document.getElementById('custom-appliance-name').value.trim();
+                const wattage = parseInt(document.getElementById('custom-wattage').value);
+                const hours = parseInt(document.getElementById('custom-hours').value);
+                const qty = parseInt(document.getElementById('custom-qty').value);
+                
+                if (name && !isNaN(wattage) && !isNaN(hours) && !isNaN(qty)) {
+                    const customId = 'custom-' + Date.now();
+                    addCustomAppliance(customId, name, wattage, hours, qty);
+                    
+                    // Reset custom appliance form
+                    document.getElementById('custom-appliance-name').value = '';
+                    document.getElementById('custom-wattage').value = '100';
+                    document.getElementById('custom-hours').value = '1';
+                    document.getElementById('custom-qty').value = '1';
+                    document.getElementById('custom-appliance-section').style.display = 'none';
+                    document.getElementById('appliance-list').value = '';
+                }
+            });
+            
+            // Function to add appliance to the container with rating options
+            function addAppliance(id, config) {
+                const container = document.getElementById('appliances-container');
+                
+                // Create select options
+                let optionsHtml = '';
+                config.options.forEach(option => {
+                    optionsHtml += `<option value="${option.value}">${option.text}</option>`;
+                });
+                
+                const applianceHtml = `
+                    <div class="appliance-item" data-id="${id}">
+                        <div class="appliance-name">${config.name}</div>
+                        <div class="appliance-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-appliance="${id}">-</button>
+                                <input type="number" class="quantity-input" id="${id}-qty" value="1" min="0">
+                                <button class="quantity-btn plus" data-appliance="${id}">+</button>
+                            </div>
+                            <select class="wattage-select" id="${id}-wattage">
+                                ${optionsHtml}
+                            </select>
+                            <span>×</span>
+                            <input type="number" class="hours-input" id="${id}-hours" value="${config.hours}" placeholder="Hours" min="0" max="24">
+                            <span>hours/day</span>
+                            <button class="remove-appliance" style="background-color: #e74c3c; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; margin-left: 10px;">Remove</button>
+                        </div>
+                        ${config.note ? `<div class="hp-note">${config.note}</div>` : ''}
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', applianceHtml);
+            }
+            
+            // Function to add custom appliance
+            function addCustomAppliance(id, name, wattage, hours, qty) {
+                const container = document.getElementById('appliances-container');
+                
+                const applianceHtml = `
+                    <div class="appliance-item" data-id="${id}">
+                        <div class="appliance-name">${name}</div>
+                        <div class="appliance-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-appliance="${id}">-</button>
+                                <input type="number" class="quantity-input" id="${id}-qty" value="${qty}" min="1">
+                                <button class="quantity-btn plus" data-appliance="${id}">+</button>
+                            </div>
+                            <input type="number" class="wattage-input" id="${id}-wattage" value="${wattage}" placeholder="Wattage" min="1" style="width: 80px;">
+                            <span>W ×</span>
+                            <input type="number" class="hours-input" id="${id}-hours" value="${hours}" placeholder="Hours" min="0" max="24">
+                            <span>hours/day</span>
+                            <button class="remove-appliance" style="background-color: #e74c3c; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; margin-left: 10px;">Remove</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', applianceHtml);
+            }
+            
+            // Calculate button functionality
+            document.getElementById('calculate-btn').addEventListener('click', calculateSolarRequirements);
+            
+            function calculateSolarRequirements() {
+                const applianceItems = document.querySelectorAll('#appliances-container .appliance-item');
+                const appliances = [];
+                
+                applianceItems.forEach(item => {
+                    const id = item.getAttribute('data-id');
+                    const name = item.querySelector('.appliance-name').textContent;
+                    const qty = parseInt(item.querySelector('.quantity-input').value);
+                    
+                    let wattage;
+                    if (item.querySelector('.wattage-select')) {
+                        wattage = parseInt(item.querySelector('.wattage-select').value);
+                    } else {
+                        wattage = parseInt(item.querySelector('.wattage-input').value);
+                    }
+                    
+                    const hours = parseInt(item.querySelector('.hours-input').value);
+                    
+                    if (qty > 0) {
+                        appliances.push({ id, name, qty, wattage, hours });
+                    }
+                });
+                
+                if (appliances.length === 0) {
+                    alert('Please add at least one appliance with quantity greater than 0');
+                    return;
+                }
+                
+                // Calculate total daily consumption in Watt-hours
+                let totalWh = 0;
+                let peakLoad = 0;
+                
+                appliances.forEach(app => {
+                    const applianceLoad = app.qty * app.wattage * app.hours;
+                    totalWh += applianceLoad;
+                    
+                    // Calculate peak load (all appliances running simultaneously)
+                    const simultaneousLoad = app.qty * app.wattage;
+                    peakLoad += simultaneousLoad;
+                });
+                
+                // Get system parameters
+                const systemVoltage = parseInt(document.getElementById('system-voltage').value);
+                const sunHours = parseFloat(document.getElementById('sun-hours').value);
+                const backupDays = parseInt(document.getElementById('backup-days').value);
+                const batteryDod = parseInt(document.getElementById('battery-dod').value) / 100;
+                
+                // Calculate solar panel requirements (accounting for 80% system efficiency)
+                const solarCapacity = Math.ceil(totalWh / (sunHours * 0.8));
+                
+                // Calculate battery bank requirements
+                const batteryWh = totalWh * backupDays;
+                const batteryAh = Math.ceil(batteryWh / (systemVoltage * batteryDod));
+                
+                // Calculate inverter size (25% larger than peak load)
+                const inverterSize = Math.ceil(peakLoad * 1.25);
+                
+                // Update results
+                document.getElementById('total-consumption').textContent = `${totalWh.toLocaleString()} Wh`;
+                document.getElementById('solar-capacity').textContent = `${solarCapacity.toLocaleString()} W`;
+                document.getElementById('battery-capacity').textContent = `${batteryAh.toLocaleString()} Ah @ ${systemVoltage}V`;
+                document.getElementById('inverter-size').textContent = `${inverterSize.toLocaleString()} W`;
+                
+                // Generate recommendations
+                generateRecommendations(totalWh, solarCapacity, batteryAh, systemVoltage, inverterSize);
+            }
+            
+            function generateRecommendations(totalWh, solarCapacity, batteryAh, systemVoltage, inverterSize) {
+                // System type recommendation
+                let systemType = '';
+                if (totalWh < 2000) {
+                    systemType = 'Small residential system (12V or 24V)';
+                } else if (totalWh < 5000) {
+                    systemType = 'Medium residential system (24V)';
+                } else {
+                    systemType = 'Large residential/commercial system (48V)';
+                }
+                
+                // Panel recommendation
+                const panelCount = Math.ceil(solarCapacity / 330); // Assuming 330W panels
+                const panelRec = `Approximately ${panelCount} x 330W solar panels or ${Math.ceil(solarCapacity / 550)} x 550W panels.`;
+                
+                // Battery recommendation
+                const batteryRec = `${Math.ceil(batteryAh / 100)} x 100Ah ${systemVoltage}V deep cycle batteries or 
+                                  ${Math.ceil(batteryAh / 200)} x 200Ah batteries. Consider lithium for better performance.`;
+                
+                // Inverter recommendation
+                let inverterType = '';
+                if (inverterSize < 1000) {
+                    inverterType = 'PWM inverter';
+                } else if (inverterSize < 3000) {
+                    inverterType = 'MPPT inverter';
+                } else {
+                    inverterType = 'High-capacity MPPT inverter or multiple inverters in parallel';
+                }
+                const inverterRec = `${inverterType} with ${inverterSize}W capacity. Ensure pure sine wave for sensitive electronics.`;
+                
+                // Update recommendation elements
+                document.getElementById('system-type-recommendation').textContent = systemType;
+                document.getElementById('panel-recommendation').textContent = panelRec;
+                document.getElementById('battery-recommendation').textContent = batteryRec;
+                document.getElementById('inverter-recommendation').textContent = inverterRec;
+            }
+        });
+    </script>
+</body>
+</html
